@@ -1,9 +1,9 @@
 import Bungus from './bungus'
-import Dungus from './dungus'
+import Treasure from './treasure'
 
 
 export const items = [
   Bungus,
-  Dungus,
+  Treasure,
 ]
 
