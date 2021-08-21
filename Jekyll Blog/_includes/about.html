@@ -1,0 +1,20 @@
+{%- assign about_collection = site.collections | find: "label", "about" -%}
+{%- assign about_sections = about_collection.docs -%}
+<div class="wrapper">
+  {%- for section in about_sections -%}
+  {%- assign icon = section.icon | append: ".svg" | prepend: site.icon_dir -%}
+  <div class="about-section-topic">
+    <img src="{{ icon }}" width="{{ icon | image_size: 'w' }}" height="{{ icon | image_size: 'h' }}" alt="{{ section.icon }} symbol">
+    <div class="about-section-topic-content">
+      {{ section.content }}
+    </div>
+  </div>
+  {%- assign arrow = site.icon_dir | append: "down_arrow.svg"  -%}
+  {%- if forloop.last != true -%}
+  <div class="about-section-arrow">
+    <img src="{{ arrow }}" width="{{ arrow | image_size: 'w' }}" height="{{ arrow | image_size: 'h' }}" alt="">
+  </div>
+  {%- endif -%}
+  {%- endfor -%}
+</div>
+

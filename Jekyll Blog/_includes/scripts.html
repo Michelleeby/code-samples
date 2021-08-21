@@ -1,0 +1,39 @@
+<script>
+// Toggle Show Input/Output
+function toggleShowInputOutput() {
+  // Equally sized element arrays
+  let buttons = document.querySelectorAll(".code-post-sample.sample-header");
+  let arrows = document.querySelectorAll(".code-post-sample.sample-header .arrow");
+  let samples = document.querySelectorAll(".code-post.code-post-sample");
+
+  for (let i = 0; i < buttons.length; i++) {
+    buttons[i].addEventListener("click", function(){
+      arrows[i].classList.toggle("up");
+      samples[i].querySelector(".sample-code").classList.toggle("element--closed");
+    });
+  }
+}
+function toggleActiveSolution() {
+  let prompts = document.querySelectorAll("article.code-post");
+  for (const prompt of prompts) {
+    let solutions = prompt.querySelectorAll(".code-post.code-post-solutions > li");
+    let toggles = prompt.querySelectorAll(".solution-type > button");
+
+    for (let i = 0; i < solutions.length; i++) {
+      toggles[i].addEventListener("click", function(){
+        solutions.forEach(function(solution){
+          solution.classList.toggle("element--closed", true);
+        });
+        toggles.forEach(function(t){
+          t.classList.toggle("solution--active", false);
+        });
+        solutions[i].classList.toggle("element--closed", false);
+        toggles[i].classList.toggle("solution--active");
+      });
+    }
+  }
+}
+
+toggleActiveSolution();
+toggleShowInputOutput();
+</script>

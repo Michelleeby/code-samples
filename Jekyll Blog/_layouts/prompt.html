@@ -1,0 +1,52 @@
+---
+layout: default
+---
+<!-- Title and Question -->
+<h1 class="code-post code-post-header">{{ page.title | upcase }}</h2>
+<p class="code-post code-post-prompt">{{ page.question }}</p>
+<!-- Sample Input/Output -->
+<aside class="code-post code-post-sample">
+  <h2 class="code-post-sample sample-header">{{ "Input" | upcase }}</h3>
+  <code class="code-post-sample">{{ page.input | print_sample }}</code>
+</aside>
+<aside class="code-post code-post-sample">
+  <h2 class="code-post-sample sample-header">{{ "Output" | upcase }}</h3>
+  <code class="code-post-sample">{{ page.output | print_sample }}</code>
+</aside>
+<!-- Solutions -->
+<ul class="code-post code-post-solutions">
+  {%- for solution in page.solutions -%}
+  <!-- Solution -->
+  <li class="{{ solution.solution_id }}">
+    <!-- Solution Languages -->
+    <ul class="solution-languages">
+      {%- assign solution_files = site.static_files | where_exp:"file",
+      "file.code_file == true and file.basename contains solution.solution_id" -%}
+      {%- for file in solution_files -%}
+      <!-- Solution Language Selectors -->
+      <li class="solution-language-{{ file.extname | ext_to_lang | downcase }}">
+        <button>{{ file.extname | ext_to_lang }}</button>
+      </li>
+      {%- endfor -%}
+    </ul>
+    <!-- Solution Code Blocks -->
+    <ul class="solution-code-blocks">
+      {%- for file in solution_files -%}
+      <li class="solution-language-{{ file.extname | ext_to_lang | downcase }}">
+        {%- variable_highlight {{ file.extname | ext_to_lang | downcase }} -%}
+        {{ file.name | print_code }}
+        {%- endvariable_highlight -%}
+      </li>
+      {%- endfor -%}
+    </ul>      
+  </li>
+  {%- endfor -%}
+</ul>
+<!-- Solution Type Selectors -->
+<ul class="solution-types">
+  {%- for solution_type in page.solutions -%}
+  <li class="solution-type {{ solution_type.solution_type | replace: ' ', '-' | downcase  }}">
+    <button>{{ solution_type.solution_type }}</button>
+  </li>
+  {%- endfor -%}
+</ul>

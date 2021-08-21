@@ -1,0 +1,75 @@
+{%- assign prompts = site.data.prompts -%}
+<div class="wrapper">
+  {%- for prompt in prompts -%}
+  <!-- Prompt -->
+  <article class="code-post {{ prompt.prompt_id }}">
+    <!-- Title and Question -->
+    <h3 class="code-post code-post-header">
+      <a href="/prompts/{{ prompt.prompt_title | replace: ' ', '-' }}" class="code-post-link">
+        {{ prompt.prompt_title | upcase }}
+      </a>
+    </h3>
+    <p class="code-post code-post-prompt">{{ prompt.prompt_question }}</p>
+    <!-- Sample Input/Output -->
+    <aside class="code-post code-post-sample">
+      <h4 class="code-post-sample sample-header">{{ "Input" | upcase }}<i class="arrow"></i></h4>
+      <code class="code-post-sample sample-code element--closed">
+        {{ prompt.prompt_input | print_sample }}
+      </code>
+    </aside>
+    <aside class="code-post code-post-sample">
+      <h4 class="code-post-sample sample-header">{{ "Output" | upcase }}<i class="arrow"></i></h4>
+      <code class="code-post-sample sample-code element--closed">
+        {{ prompt.prompt_output | print_sample }}
+      </code>
+    </aside>
+    <!-- Solutions -->
+    <ul class="code-post code-post-solutions">
+      {%- assign prompt_solutions = site.data.solutions | where: "prompt_id", prompt.prompt_id -%}
+      {%- for solution in prompt_solutions -%}
+      {%- if forloop.first == true -%}
+      {%- assign solution_class = "code-post-solution" -%}
+      {%- else -%}
+      {%- assign solution_class = "code-post-solution element--closed" -%}
+      {%- endif -%}
+      <!-- Solution -->
+      <li class="{{ solution_class | append: ' solution-' | append: solution.solution_id }}">
+        <!-- Solution Languages -->
+        <ul class="solution-languages">
+          {%- assign solution_files = site.static_files | where_exp:"file",
+          "file.code_file == true and file.basename contains solution.solution_id" -%}
+          {%- for file in solution_files -%}
+          <!-- Solution Language Selectors -->
+          <li class="solution-language-{{ file.extname | ext_to_lang | downcase }}">
+            <button>{{ file.extname | ext_to_lang }}</button>
+          </li>
+          {%- endfor -%}
+        </ul>
+        <!-- Solution Code Blocks -->
+        <ul class="solution-code-blocks">
+          {%- for file in solution_files -%}
+          <li class="solution-language-{{ file.extname | ext_to_lang | downcase }}">
+            {%- variable_highlight {{ file.extname | ext_to_lang | downcase }} -%}
+            {{ file.name | print_code }}
+            {%- endvariable_highlight -%}
+          </li>
+          {%- endfor -%}
+        </ul>
+      </li>
+      {%- endfor -%}
+    </ul>
+    <!-- Solution Type Selectors -->
+    <ul class="solution-types">
+      {%- for solution_type in prompt_solutions -%}
+      <li class="solution-type">
+        {%- if forloop.first == true -%}
+        <button class="solution--active">{{ solution_type.solution_type }}</button>
+        {%- else -%}
+        <button>{{ solution_type.solution_type }}</button>
+        {%- endif -%}
+      </li>
+      {%- endfor -%}
+    </ul>
+  </article>
+  {%- endfor -%}
+</div>
