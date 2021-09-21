@@ -152,7 +152,7 @@
         <?php $url = SolrSearch_Helpers_View::getDocumentUrl($doc); ?>
 
         <!-- Title. -->
-        <a href="<?php echo $url; ?>" class="result-title" target="_blank"><?php
+        <a href="<?php echo $url; ?>" class="result-title"><?php
                 $title = is_array($doc->title) ? $doc->title[0] : $doc->title;
                 if (empty($title)) {
                     $title = '<i>' . __('Untitled') . '</i>';
@@ -164,71 +164,81 @@
 
       <!-- Description. -->
       <div class="result-description">
+        
+        <?php 
+          $item = null;
+          
+          if ($doc->model != 'SimplePagesPage') {
+            $item = get_db()->getTable($doc->model)->find($doc->modelid);
+          }
+        ?>
 
         <!-- Item Thumbnail. -->
-        <a href="<?php echo $url; ?>" target="_blank">
-          <?php
-            $item = get_db()->getTable($doc->model)->find($doc->modelid);
-            echo item_image(
-                'thumbnail', 
-                array('class' => 'result-thumbnail',
-                      'alt' => $itemTitle, 
-                      'width' => '140px', 
-                      'height' => '200px'),
-                0, 
-                $item
-            );
-          ?>
-        </a>
+        <?php if ($item): ?>
 
-        <!-- Metadata. -->
-        <ul class="result-metadata">
-          <?php 
+          <a href="<?php echo $url; ?>" target="_blank">
+            <?php
+                echo item_image(
+                  'thumbnail', 
+                  array('class' => 'result-thumbnail',
+                        'alt' => $itemTitle, 
+                        'width' => '140px', 
+                        'height' => '200px'),
+                  0, 
+                  $item
+                );
+            ?>
+          </a>
           
-          $date = metadata($item, 
-                            array('Item Type Metadata', 'Start Date'),
-                            array('ignore_unkown' => true)
-                          );
-          $city = metadata($item, 
-                           array('Item Type Metadata', 'City'),
-                           array('ignore_unkown' => true)
-                          );
-          $state = metadata($item, 
-                            array('Item Type Metadata', 'State'),
-                            array('ignore_unkown' => true)
-                           );
-          $type = metadata($item,
-                           array('Item Type Metadata', 'Convention Type'),
-                           array('ignore_unknown' => true)
-                          );
-          ?>
+          <!-- Metadata. -->
+          <ul class="result-metadata">
+            <?php
+            
+                $date = metadata($item, 
+                  array('Item Type Metadata', 'Start Date'),
+                  array('ignore_unkown' => true)
+                );
+                $city = metadata($item, 
+                  array('Item Type Metadata', 'City'),
+                  array('ignore_unkown' => true)
+                );
+                $state = metadata($item, 
+                  array('Item Type Metadata', 'State'),
+                  array('ignore_unkown' => true)
+                );
+                $type = metadata($item,
+                  array('Item Type Metadata', 'Convention Type'),
+                  array('ignore_unknown' => true)
+                );
+            ?>
 
-          <?php if ($date): ?>
-            <li class="result-metadata-item">
-              <span class="meta-title">Date:</span> <?php echo $date; ?>
-            </li>
-          <?php endif; ?>
+            <?php if ($date): ?>
+              <li class="result-metadata-item">
+                <span class="meta-title">Date:</span> <?php echo $date; ?>
+              </li>
+            <?php endif; ?>
 
-          <?php if ($city): ?>
-            <li class="result-metadata-item">
-              <span class="meta-title">City:</span> <?php echo $city; ?>
-            </li>
-          <?php endif; ?>
+            <?php if ($city): ?>
+              <li class="result-metadata-item">
+                <span class="meta-title">City:</span> <?php echo $city; ?>
+              </li>
+            <?php endif; ?>
 
-          <?php if ($state): ?>
-            <li class="result-metadata-item">
-              <span class="meta-title">State:</span> <?php echo $state; ?>
-            </li>
-          <?php endif; ?>
+            <?php if ($state): ?>
+              <li class="result-metadata-item">
+                <span class="meta-title">State:</span> <?php echo $state; ?>
+              </li>
+            <?php endif; ?>
 
-          <?php if ($type): ?>
-            <li class="result-metadata-item">
-              <span class="meta-title">Type:</span> <?php echo $type; ?>
-            </li>
-          <?php endif; ?>
+            <?php if ($type): ?>
+              <li class="result-metadata-item">
+                <span class="meta-title">Type:</span> <?php echo $type; ?>
+              </li>
+            <?php endif; ?>
 
-        </ul>
-
+          </ul>
+        <?php endif; ?>
+        
         <!-- Highlighting. -->
         <?php if (get_option('solr_search_hl')): ?>
           <ul class="hl">
@@ -254,3 +264,4 @@
 
 <?php echo pagination_links(); ?>
 <?php echo foot();
+
