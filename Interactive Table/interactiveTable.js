@@ -6,10 +6,9 @@
  * @param {Element} table The table the row is within.
  */
  const moveRow = (action, row, table) => {
+  switch (action) {
   
-	switch (action) {
-  
-  	case 'move-up':
+    case 'move-up':
     	const rowUp = row.previousSibling;
       if ( rowUp ) { table.insertBefore(row, rowUp); }
       break;
