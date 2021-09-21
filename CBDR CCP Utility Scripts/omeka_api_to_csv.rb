@@ -37,7 +37,15 @@ def fetchItemJson(url, total, key, acc = [])
     items = JSON.parse(HTTP.get(url, :params => opts))
 
     acc.push(items)
-    sleep(1)
+
+    feedback = "
+    Page ##{page} finished downloading.
+    #{acc.length} pages downloaded.
+    #{total - acc.length} pages left to download.
+    "
+
+    print(feedback)
+    sleep(1) # Rest for the server.
   end
 
   return acc.flatten
@@ -144,7 +152,16 @@ def processItemsForCsv(loi, lok, key, init=[])
       file,
       elements
     ].flatten
-  
+    
+    feedback = "
+    Item ##{item["id"]} finished processing.
+    #{memo.length + 1} items processed.
+    #{loi.length - (memo.length + 1)} items left to process.
+    "
+
+    print(feedback)
+    sleep(1) # Rest for the server.
+    
     memo.push(getValues(lok, (objs.reduce({}) {|acc, obj| acc.merge(obj)})))
   end
 
@@ -205,7 +222,7 @@ OMEKA_ITEM_KEYS = [ # The Metadata fields to include.
 
 
 items = processItemsForCsv(fetchItemJson(BASE, CALLS, API_KEY), OMEKA_ITEM_KEYS, API_KEY)
-outfile = "path/to/output.csv"
+outfile = "path/to/outfile.csv"
 
 
 ### EXECUTION ###
